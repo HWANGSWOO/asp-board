@@ -1,1 +1,22 @@
-﻿<h1>로그인</h1>
+﻿@model asp.ViewModel.LoginViewModel //로그인뷰모델을 참조하겠다라는 의미
+<h1>로그인</h1>
+
+<form class="form-horizontal" method="post" asp-controller="Account" asp-action="Login">
+    <div class = "form-group">
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+        <label>사용자 ID</label>
+        <input type="text" class="form-control" asp-for="UserId" placeholder="사용자 ID 입력"/> <!--form-controll을 사용하면 폼은 선택했을때 에니메이션 효과-->
+        <!--asp- for을 쓴 이유는 컨트롤러에서 user model을 받을껀데 이게 아이디인지 비밀번호인지 알려주는 역할-->
+        <span class="text-danger" asp-validation-for="UserId"></span> <!--아이디를 쓰라는 경고-->
+    </div>
+
+     <div class = "form-group">
+        <label>사용자 비밀번호</label>
+        <input type="password" class="form-control" asp-for="UserPassword" placeholder="사용자 비밀번호 입력"/>
+         <span class="text-danger" asp-validation-for="UserPassword"></span>
+    </div>
+
+      <div class = "form-group">
+          <button type="submit" class="btn btn-success">로그인</button>
+      </div>
+</form>

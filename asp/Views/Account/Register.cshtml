@@ -1,4 +1,4 @@
-﻿@model asp.Models.User
+﻿@model asp.Models.User //8번째 줄에 UserId를 쓰기 위해 사용 UserId가 어디서 왔는지 알려주는 것
 
 <h2>회원가입</h2>
 
@@ -6,18 +6,23 @@
     <div class = "form-group">
         <label>사용자 ID</label>
         <input type="text" class="form-control" asp-for="UserId" placeholder="사용자 ID 입력"/> <!--form-controll을 사용하면 폼은 선택했을때 에니메이션 효과-->
+        <!--asp- for을 쓴 이유는 컨트롤러에서 user model을 받을껀데 이게 아이디인지 비밀번호인지 알려주는 역할-->
+        <span class="text-danger" asp-validation-for="UserId"></span> <!--아이디를 쓰라는 경고-->
     </div>
     <div class = "form-group">
         <label>사용자 비밀번호</label>
-        <input type="text" class="form-control" asp-for="UserPassword" placeholder="사용자 비밀번호 입력"/>
+        <input type="password" class="form-control" asp-for="UserPassword" placeholder="사용자 비밀번호 입력"/>
+         <span class="text-danger" asp-validation-for="UserPassword"></span>
     </div>
     <div class = "form-group">
         <label>사용자 이름</label>
         <input type="text" class="form-control" asp-for="UserName" placeholder="사용자 이름 입력"/>
-     </div>
+         <span class="text-danger" asp-validation-for="UserName"></span>
+    </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">회원가입</button>  <!--submit이용한 이유는 위에 정보들이 입력이 됨, btn-primary는 버튼이 파란색-->
         <a class="btn btn-warning" href="#">취소</a>                      <!--btn-warning은 주황색-->
+  
     </div>
    
 </form>
