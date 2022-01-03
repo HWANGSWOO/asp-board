@@ -1,0 +1,23 @@
+﻿@model asp.Models.User
+
+<h2>회원가입</h2>
+
+<form class="form-horizontal" method="post" asp-controller="Account" asp-action="Register">
+    <div class = "form-group">
+        <label>사용자 ID</label>
+        <input type="text" class="form-control" asp-for="UserId" placeholder="사용자 ID 입력"/> <!--form-controll을 사용하면 폼은 선택했을때 에니메이션 효과-->
+    </div>
+    <div class = "form-group">
+        <label>사용자 비밀번호</label>
+        <input type="text" class="form-control" asp-for="UserPassword" placeholder="사용자 비밀번호 입력"/>
+    </div>
+    <div class = "form-group">
+        <label>사용자 이름</label>
+        <input type="text" class="form-control" asp-for="UserName" placeholder="사용자 이름 입력"/>
+     </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">회원가입</button>  <!--submit이용한 이유는 위에 정보들이 입력이 됨, btn-primary는 버튼이 파란색-->
+        <a class="btn btn-warning" href="#">취소</a>                      <!--btn-warning은 주황색-->
+    </div>
+   
+</form>

@@ -8,7 +8,7 @@ namespace asp.DataContext
         public DbSet<User> Users { get; set; } //테이블 생성
         public DbSet<Note> Notes { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) //db연결
         {
             optionsBuilder.UseSqlServer("Data Source=kuniv-practice.database.windows.net;Initial Catalog=kuniv-practice;User ID=kuniv;Password=tkdgkdlqkswja123@@;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
