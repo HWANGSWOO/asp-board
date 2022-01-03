@@ -24,6 +24,7 @@ namespace asp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSession(); // 세션 기능 사용
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +44,7 @@ namespace asp
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession(); //어플리케이션에 세션 기능 사용
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

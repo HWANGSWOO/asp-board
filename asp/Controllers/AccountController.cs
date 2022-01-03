@@ -1,6 +1,7 @@
 ﻿using asp.DataContext;
 using asp.Models;
 using asp.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -30,6 +31,9 @@ namespace asp.Controllers
                                              u.UserPassword.Equals(model.UserPassword));//유저에서 처음 혹은 기본값을 출력을 하겠다는 뜻
                     if(user != null)
                     {
+                        //HttpContext.Session.SetInt32(key, value); key는 특정 세션을 식별하는 식별자
+                                                                     //value는 실제 데이터 값
+                        HttpContext.Session.SetInt32("USER_LOGIN_KEY", user.UserNo); //로그인 하면 userno가 등록이 됨
                         return RedirectToAction("index", "Home");
                     }
                   
@@ -37,6 +41,13 @@ namespace asp.Controllers
                 ModelState.AddModelError(string.Empty, "로그인 실패");
             }
             return View(model); //아닐 때  model
+        }
+        public IActionResult Logout()
+        {
+            //HttpContext.Session.Clear(); --> 존재하는 모든것 삭제
+            HttpContext.Session.Remove("USER_LOGIN_KEY");
+            return RedirectToAction("Index", "Home");
+
         }
 
 

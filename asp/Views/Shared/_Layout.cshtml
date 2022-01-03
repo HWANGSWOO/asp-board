@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,11 +28,17 @@
                     </ul>
 
                 <ul class="nav navbar-nav pull-right">
-
-                    <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">회원가입</a></li>    
-                    <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">로그인</a></li>    
-                
-                </ul>
+                    @if (Context.Session.GetInt32("USER_LOGIN_KEY") == null)
+                        {
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">회원가입</a></li>    
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">로그인</a></li>
+                        }
+                        else
+                        {
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">로그아웃</a></li>
+                        }
+                        
+                        </ul>
 
 
 
