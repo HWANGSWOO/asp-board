@@ -9,8 +9,8 @@ using asp.DataContext;
 namespace asp.Migrations
 {
     [DbContext(typeof(NoteDbcontext))]
-    [Migration("20220102143622_NoteDb1")]
-    partial class NoteDb1
+    [Migration("20220103130802_NoteDb2")]
+    partial class NoteDb2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,8 +60,9 @@ namespace asp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserPassword")
-                        .HasColumnType("int");
+                    b.Property<string>("UserPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserNo");
 
