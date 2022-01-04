@@ -55,7 +55,7 @@ namespace asp.Controllers
                 using (var db = new NoteDbcontext())
                 {
                     db.Notes.Add(model);
-                    if(db.SaveChanges()>0)  //SaveChanges -> commit, 성공한 개수 
+                    if(db.SaveChanges() > 0)  //SaveChanges -> commit, 성공한 개수 
                     {
                         return Redirect("Index"); // 뒤에 Note 적혀있는 것과 같음
                     }   
