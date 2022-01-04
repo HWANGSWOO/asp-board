@@ -29,6 +29,28 @@ namespace asp.Controllers
             }
         }
         /// <summary>
+        /// 게시판 상세
+        /// </summary>
+        /// <param name="NoteNo"></param>
+        /// <returns></returns>
+        public IActionResult Detail(int NoteNo)
+        
+        {
+            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
+            {
+                //로그인이 안된 상태
+                return RedirectToAction("Login", "Account");
+            }
+
+            using(var db = new NoteDbcontext())
+            {
+                var note = db.Notes.FirstOrDefault(n => n.NoteNo.Equals(NoteNo));
+                return View(note);
+            }
+        }
+
+
+        /// <summary>
         /// 게시물 추가
         /// </summary>
         /// <returns></returns>
@@ -49,7 +71,8 @@ namespace asp.Controllers
                 //로그인이 안된 상태
                 return RedirectToAction("Login", "Account");
             }
-            model.NoteNo = int.Parse(HttpContext.Session.GetInt32("USER_LOGIN_KEY").ToString()); //userno가 null이면 안되서 
+
+            model.UserNo = int.Parse(HttpContext.Session.GetInt32("USER_LOGIN_KEY").ToString()); //userno가 null이면 안되서 
             if (ModelState.IsValid)
             {
                 using (var db = new NoteDbcontext())

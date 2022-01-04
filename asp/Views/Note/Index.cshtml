@@ -1,4 +1,6 @@
-﻿<table class="table table-bordered">
+﻿
+<table class="table table-bordered">
+    <h1>게시판</h1>
     <thead>
         <tr>
             <th>번호</th>
@@ -10,12 +12,36 @@
         @foreach(var note in Model)
         {
             <tr>
-               <td>@note.NoteNo</td>
-               <td>@note.NoteTilte</td>
-               <td>@note.NoteNo</td>
+              <td>@note.NoteNo</td>
+               <td>
+                   <a asp-controller="Note" asp-action="Detail" asp-route-NoteNo="@note.NoteNo">@note.NoteTitle</a>
+               </td>
+               <td>@note.UserNo</td>    
             </tr>
         }
     </tbody>
 </table>
+
+
+
+@*<table class="table table-bordered">
+    <h1>게시판2</h1>
+    <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+        </tr>
+    </thead>
+    <tbody>
+        {
+            <tr>
+                <td>d</td>
+                <td>d</td>
+                <td>d</td>       
+            </tr>
+        }
+    </tbody>
+</table>*@
 
 <a class="btn btn-warning" asp-controller="Note" asp-action="Add">게시물 작성</a>
