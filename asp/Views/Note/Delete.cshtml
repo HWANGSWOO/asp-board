@@ -1,0 +1,15 @@
+﻿@model asp.Models.Note
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>삭제 하시겠습니까?</h3>
+  
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-danger" /> 
+        <a asp-action="Index">목록</a>
+    </form>
+</>

@@ -1,23 +1,29 @@
 ﻿using asp.DataContext;
+
 using asp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace asp.Controllers
 {
-    
+
+
     public class NoteController : Controller
     {
-        /// <summary>
-        /// 게시판 리스트
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Index()
+
+
+
+            /// <summary>
+            /// 게시판 리스트
+            /// </summary>
+            /// <returns></returns>
+            public IActionResult Index()
         {
-          
-                using (var db = new NoteDbcontext())
+
+            using (var db = new NoteDbcontext())
             {
                 //var list = new List<Note>(); //리스트 선언
                 var list = db.Notes.ToList(); //노트테이블 안에 있는 모든 리스트를 출력하려면 Tolist
@@ -27,14 +33,14 @@ namespace asp.Controllers
         /// <summary>
         /// 게시판 상세
         /// </summary>
-        /// <param name="NoteNo"></param>
+
         /// <returns></returns>
         public IActionResult Detail(int NoteNo)
-        
-        {
-          
 
-            using(var db = new NoteDbcontext())
+        {
+
+
+            using (var db = new NoteDbcontext())
             {
                 var note = db.Notes.FirstOrDefault(n => n.NoteNo.Equals(NoteNo));
                 return View(note);
@@ -79,13 +85,7 @@ namespace asp.Controllers
             }
             return View(model);
         }
-
-
-
-        /// <summary>
-        /// 게시물 수정
-        /// </summary>
-        /// <returns></returns>
+      
 
         public IActionResult Edit()
         {
@@ -94,8 +94,24 @@ namespace asp.Controllers
                 //로그인이 안된 상태
                 return RedirectToAction("Login", "Account");
             }
+         
+
+                return View();
+        }
+        [HttpPost]
+        public IActionResult Edit(Note model)
+        {
+            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
+            {
+                //로그인이 안된 상태
+                return RedirectToAction("Login", "Account");
+            }
             return View();
         }
+
+
+
+
         /// <summary>
         /// 게시물 삭제
         /// </summary>
@@ -108,7 +124,9 @@ namespace asp.Controllers
                 //로그인이 안된 상태
                 return RedirectToAction("Login", "Account");
             }
+            
             return View();
         }
+
     }
 }

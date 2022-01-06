@@ -1,3 +1,5 @@
+
+using asp.DataContext.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +27,9 @@ namespace asp
         {
             services.AddControllersWithViews();
             services.AddSession(); // 세션 기능 사용
+           // services.AddScoped<INoteRepository, NoteRepository>(); //서비스 내에 레포지토리를 등록
+            //services.AddTransient<INoteRepository, NoteRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
