@@ -36,7 +36,7 @@ namespace asp.Controllers
                         HttpContext.Session.SetInt32("USER_LOGIN_KEY", user.UserNo); //로그인 하면 userno가 등록이 됨
                         return RedirectToAction("index", "Home");
                     }
-                  
+                
                 }
                 ModelState.AddModelError(string.Empty, "로그인 실패");
             }

@@ -5,6 +5,7 @@ namespace asp.Models
 {
     public class Note
     {
+
         /// <summary>
         /// 개시판 번호
         /// </summary>

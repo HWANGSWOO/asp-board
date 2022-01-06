@@ -1,8 +1,10 @@
 
-using asp.DataContext.Repositories;
+using asp.DataContext;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,19 +17,22 @@ namespace asp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+     
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services) 
         {
+            //services.AddDbContext<NoteDbcontext>(options =>
+            //{
+            //    options.UseSqlServer(_config.GetConnectionString("AspConnection"));
+            //});
+            services.AddMvc();
             services.AddControllersWithViews();
             services.AddSession(); // 세션 기능 사용
-           // services.AddScoped<INoteRepository, NoteRepository>(); //서비스 내에 레포지토리를 등록
+           // services.AddTransient<DbSeeder>();
+            //services.AddScoped<INoteRepository, NoteRepository>(); //서비스 내에 레포지토리를 등록
             //services.AddTransient<INoteRepository, NoteRepository>();
 
         }
@@ -58,6 +63,8 @@ namespace asp
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
         }
     }
 }

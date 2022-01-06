@@ -3,6 +3,7 @@
 using asp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,14 +14,12 @@ namespace asp.Controllers
 
     public class NoteController : Controller
     {
-
-
-
-            /// <summary>
-            /// 게시판 리스트
-            /// </summary>
-            /// <returns></returns>
-            public IActionResult Index()
+       
+        /// <summary>
+        /// 게시판 리스트
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Index()
         {
 
             using (var db = new NoteDbcontext())
@@ -71,7 +70,7 @@ namespace asp.Controllers
             }
 
             model.UserNo = int.Parse(HttpContext.Session.GetInt32("USER_LOGIN_KEY").ToString()); //userno가 null이면 안되서 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) // 유효성 검사 맞으면 true를 리턴
             {
                 using (var db = new NoteDbcontext())
                 {
@@ -116,17 +115,11 @@ namespace asp.Controllers
         /// 게시물 삭제
         /// </summary>
         /// <returns></returns>
-
-        public IActionResult Delete()
-        {
-            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
-            {
-                //로그인이 안된 상태
-                return RedirectToAction("Login", "Account");
+        public IActionResult Delete(Note model)
+        { 
+                return View();
             }
-            
-            return View();
         }
-
+  
     }
-}
+

@@ -4,6 +4,7 @@ namespace asp.Models
 {
     public class User
     {
+   
         /// <summary>
         ///  사용자 번호
         /// </summary>
