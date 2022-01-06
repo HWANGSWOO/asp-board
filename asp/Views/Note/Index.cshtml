@@ -9,7 +9,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var note in Model)
+        @foreach (var note in Model) //foreach를 쓴것은 리스트에 모든것을 출력하겠다라는 뜻
         {
             <tr>
               <td>@note.NoteNo</td>
@@ -24,24 +24,6 @@
 
 
 
-@*<table class="table table-bordered">
-    <h1>게시판2</h1>
-    <thead>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-        </tr>
-    </thead>
-    <tbody>
-        {
-            <tr>
-                <td>d</td>
-                <td>d</td>
-                <td>d</td>       
-            </tr>
-        }
-    </tbody>
-</table>*@
+
 
 <a class="btn btn-warning" asp-controller="Note" asp-action="Add">게시물 작성</a>

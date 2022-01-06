@@ -16,15 +16,11 @@ namespace asp.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY")==null)
-            {
-                //로그인이 안된 상태
-                return RedirectToAction("Login", "Account");
-            }
+          
                 using (var db = new NoteDbcontext())
             {
-                var list = new List<Note>(); //리스트 선언
-                //var list = db.Notes.ToList(); //노트테이블 안에 있는 모든 리스트를 출력하려면 Tolist
+                //var list = new List<Note>(); //리스트 선언
+                var list = db.Notes.ToList(); //노트테이블 안에 있는 모든 리스트를 출력하려면 Tolist
                 return View(list);
             }
         }
@@ -36,11 +32,7 @@ namespace asp.Controllers
         public IActionResult Detail(int NoteNo)
         
         {
-            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
-            {
-                //로그인이 안된 상태
-                return RedirectToAction("Login", "Account");
-            }
+          
 
             using(var db = new NoteDbcontext())
             {
