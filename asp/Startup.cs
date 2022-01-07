@@ -1,6 +1,6 @@
 
 using asp.DataContext;
-
+using asp.DataContext.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,9 +31,12 @@ namespace asp
             services.AddMvc();
             services.AddControllersWithViews();
             services.AddSession(); // 세션 기능 사용
-           // services.AddTransient<DbSeeder>();
+            var AspConnection = @"Server=kuniv-practice.database.windows.net;Database=kuniv-practice;Trusted_Connection=True;MultipleActiveResultSets=true;";
+            services.AddDbContext<NoteDbcontext>(options => options.UseSqlServer(AspConnection));
+            // services.AddTransient<DbSeeder>();
             //services.AddScoped<INoteRepository, NoteRepository>(); //서비스 내에 레포지토리를 등록
             //services.AddTransient<INoteRepository, NoteRepository>();
+
 
         }
 

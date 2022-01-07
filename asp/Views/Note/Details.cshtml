@@ -1,9 +1,11 @@
 ﻿@model asp.Models.Note
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Details";
 }
-    <h4>게시판 삭제</h4>
+
+<h1>Details</h1>
+
 <div>
     <hr />
     <dl class="row">
@@ -24,12 +26,10 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.User.UserId)
-        </dd class>
+        </dd>
     </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="NoteNo" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-         <a class="btn btn-outline-primary" asp-action="Index">목록</a>
-    </form>
+</div>
+<div>
+    <a class ="btn btn-primary" asp-action="Edit">수정</a>
+    <a class="btn btn-outline-primary" asp-action="Index">목록</a>
 </div>

@@ -1,125 +1,164 @@
-﻿using asp.DataContext;
-
-using asp.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using asp.DataContext;
+using asp.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace asp.Controllers
 {
-
-
     public class NoteController : Controller
     {
-       
-        /// <summary>
-        /// 게시판 리스트
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Index()
+        private readonly NoteDbcontext _context;
+
+        public NoteController(NoteDbcontext context)
         {
-
-            using (var db = new NoteDbcontext())
-            {
-                //var list = new List<Note>(); //리스트 선언
-                var list = db.Notes.ToList(); //노트테이블 안에 있는 모든 리스트를 출력하려면 Tolist
-                return View(list);
-            }
-        }
-        /// <summary>
-        /// 게시판 상세
-        /// </summary>
-
-        /// <returns></returns>
-        public IActionResult Detail(int NoteNo)
-
-        {
-
-
-            using (var db = new NoteDbcontext())
-            {
-                var note = db.Notes.FirstOrDefault(n => n.NoteNo.Equals(NoteNo));
-                return View(note);
-            }
+            _context = context;
         }
 
+        // GET: Notes
+        public async Task<IActionResult> Index()
+        {
+            var noteDbcontext = _context.Notes.Include(n => n.User);
+            return View(await noteDbcontext.ToListAsync());
+        }
 
-        /// <summary>
-        /// 게시물 추가
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Add()
+        // GET: Notes/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var note = await _context.Notes
+                .Include(n => n.User)
+                .FirstOrDefaultAsync(m => m.NoteNo == id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            return View(note);
+        }
+
+        // GET: Notes/Create
+        public IActionResult Create()
         {
             if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
             {
                 //로그인이 안된 상태
                 return RedirectToAction("Login", "Account");
             }
+            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId");
             return View();
         }
+
+        // POST: Notes/Create
+
         [HttpPost]
-        public IActionResult Add(Note model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("NoteNo,NoteTitle,NoteContents,UserNo")] Note note)
         {
-            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
+            if (ModelState.IsValid)
             {
-                //로그인이 안된 상태
-                return RedirectToAction("Login", "Account");
+                _context.Add(note);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
+            return View(note);
+        }
+
+        // GET: Notes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
             }
 
-            model.UserNo = int.Parse(HttpContext.Session.GetInt32("USER_LOGIN_KEY").ToString()); //userno가 null이면 안되서 
-            if (ModelState.IsValid) // 유효성 검사 맞으면 true를 리턴
+            var note = await _context.Notes.FindAsync(id);
+            if (note == null)
             {
-                using (var db = new NoteDbcontext())
+                return NotFound();
+            }
+            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
+            return View(note);
+        }
+
+        // POST: Notes/Edit/5
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("NoteNo,NoteTitle,NoteContents,UserNo")] Note note)
+        {
+            if (id != note.NoteNo)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    db.Notes.Add(model);
-                    if(db.SaveChanges() > 0)  //SaveChanges -> commit, 성공한 개수 
-                    {
-                        return Redirect("Index"); // 뒤에 Note 적혀있는 것과 같음
-                    }   
+                    _context.Update(note);
+                    await _context.SaveChangesAsync();
                 }
-                ModelState.AddModelError(string.Empty, "게시물을 저장할 수 없습니다.");
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!NoteExists(note.NoteNo))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
+            return View(note);
         }
-      
 
-        public IActionResult Edit()
+        // GET: Notes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
+            if (id == null)
             {
-                //로그인이 안된 상태
-                return RedirectToAction("Login", "Account");
+                return NotFound();
             }
-         
 
-                return View();
+            var note = await _context.Notes
+                .Include(n => n.User)
+                .FirstOrDefaultAsync(m => m.NoteNo == id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            return View(note);
         }
-        [HttpPost]
-        public IActionResult Edit(Note model)
+
+        // POST: Notes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
-            {
-                //로그인이 안된 상태
-                return RedirectToAction("Login", "Account");
-            }
-            return View();
+            var note = await _context.Notes.FindAsync(id);
+            _context.Notes.Remove(note);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-
-
-
-        /// <summary>
-        /// 게시물 삭제
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Delete(Note model)
-        { 
-                return View();
-            }
+        private bool NoteExists(int id)
+        {
+            return _context.Notes.Any(e => e.NoteNo == id);
         }
-  
     }
-
+}
