@@ -25,22 +25,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Note" asp-action="Index">게시판</a>
 
-                           
+
                         </li>
                     </ul>
 
-                <ul class="nav navbar-nav pull-right">
-                    @if (Context.Session.GetInt32("USER_LOGIN_KEY") == null)
+                    <ul class="nav navbar-nav pull-right">
+                        @if (Context.Session.GetInt32("USER_LOGIN_KEY") == null)
                         {
-                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">회원가입</a></li>    
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">회원가입</a></li>
+
                             <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">로그인</a></li>
                         }
                         else
                         {
                             <li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">로그아웃</a></li>
                         }
-                        
-                        </ul>
+
+                    </ul>
 
                 </div>
             </div>
@@ -52,6 +53,24 @@
         </main>
     </div>
 
+
+    <div class="modal" tabindex="-1" id="form-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+    
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2022 - asp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -61,5 +80,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

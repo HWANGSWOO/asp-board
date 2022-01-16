@@ -1,25 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace asp.Models
 {
     public class Note
     {
-    
+
         /// <summary>
         /// 개시판 번호
         /// </summary>
         [Key]
+        [DisplayName("NoteNo")]
         public int NoteNo { get; set; }
         /// <summary>
         /// 게시판 제목
         /// </summary>
         [Required(ErrorMessage = "게시판 제목을 입력하세요")]// Not Null 설정
+        [DisplayName("NoteTitle")]
         public string NoteTitle { get; set; }
         /// <summary>
         /// 게시물 내용
         /// </summary>
         [Required(ErrorMessage = "게시물 내용을 입력하세요")]// Not Null 설정
+        [DisplayName("NoteContents")]
         public string NoteContents { get; set; }
         /// <summary>
         /// 작성자 번호

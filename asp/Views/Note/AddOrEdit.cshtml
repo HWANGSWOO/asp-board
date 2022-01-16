@@ -2,16 +2,17 @@
 
 @{
     ViewData["Title"] = "Edit";
+   
 }
 
-<h1>Edit</h1>
 
-<hr />
+
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="NoteNo" />
+     
             <div class="form-group">
                 <label asp-for="NoteTitle" class="control-label"></label>
                 <input asp-for="NoteTitle" class="form-control" />

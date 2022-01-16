@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using asp.DataContext;
 using asp.Models;
 using Microsoft.AspNetCore.Http;
+using jQuery_Ajax_CRUD;
 
 namespace asp.Controllers
 {
@@ -47,8 +48,20 @@ namespace asp.Controllers
         }
 
         // GET: Notes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> AddOrEdit(int id = 0)
         {
+            if (id == 0)
+                return View(new Note());
+            else
+            {
+                var note = await _context.Notes.FindAsync(id);
+                if (note == null)
+                {
+                    return NotFound();
+                }
+                ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
+                return View(note);
+            }
             if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
             {
                 //로그인이 안된 상태
@@ -95,32 +108,40 @@ namespace asp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("NoteNo,NoteTitle,NoteContents,UserNo")] Note note)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("NoteNo,NoteTitle,NoteContents,UserNo")] Note note)
         {
-            if (id != note.NoteNo)
-            {
-                return NotFound();
-            }
+
 
             if (ModelState.IsValid)
             {
-                try
+                if (id == 0)
                 {
-                    _context.Update(note);
+                    _context.Add(note);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!NoteExists(note.NoteNo))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(note);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!NoteExists(note.NoteNo))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this,"Index",_context.Notes.ToList())});
                 }
-                return RedirectToAction(nameof(Index));
+
+
+                return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", note)});
             }
             ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
             return View(note);
