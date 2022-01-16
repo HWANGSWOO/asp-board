@@ -60,50 +60,20 @@ namespace asp.Controllers
                     return NotFound();
                 }
                 ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
+
                 return View(note);
             }
-            if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
-            {
-                //로그인이 안된 상태
-                return RedirectToAction("Login", "Account");
-            }
-            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId");
-            return View();
+            //if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
+            //{
+            //    //로그인이 안된 상태
+            //    return RedirectToAction("Login", "Account");
+            //}
+            //ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId");
+            //return View();
         }
 
-        // POST: Notes/Create
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NoteNo,NoteTitle,NoteContents,UserNo")] Note note)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(note);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
-            return View(note);
-        }
-
-        // GET: Notes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var note = await _context.Notes.FindAsync(id);
-            if (note == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
-            return View(note);
-        }
-
+ 
         // POST: Notes/Edit/5
 
         [HttpPost]
@@ -114,11 +84,13 @@ namespace asp.Controllers
 
             if (ModelState.IsValid)
             {
+                //INsert
                 if (id == 0)
                 {
                     _context.Add(note);
                     await _context.SaveChangesAsync();
                 }
+                // Update
                 else
                 {
                     try
@@ -137,7 +109,7 @@ namespace asp.Controllers
                             throw;
                         }
                     }
-                    return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this,"Index",_context.Notes.ToList())});
+                    return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this,"_ViewAll",_context.Notes.ToList())});
                 }
 
 

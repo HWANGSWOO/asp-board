@@ -1,5 +1,5 @@
 ﻿@model asp.Models.Note
-
+@{ Layout = null; } 
 @{
     ViewData["Title"] = "Edit";
    
@@ -9,11 +9,11 @@
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit">
+        <form asp-action="AddOrEdit" asp-route-id="@Model.NoteNo" onsubmit="return jQueryAjaxPost(this);" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="NoteNo" />
      
-            <div class="form-group">
+          <div class="form-group">
                 <label asp-for="NoteTitle" class="control-label"></label>
                 <input asp-for="NoteTitle" class="form-control" />
                 <span asp-validation-for="NoteTitle" class="text-danger"></span>
@@ -23,9 +23,16 @@
                 <input asp-for="NoteContents" class="form-control" />
                 <span asp-validation-for="NoteContents" class="text-danger"></span>
             </div>
+             <div class="form-group">
+                <label asp-for="UserNo" class="control-label"></label>
+                <select asp-for="UserNo" class="form-control" asp-items="ViewBag.UserNo"></select>
+                <span asp-validation-for="UserNo" class="text-danger"></span>
+            </div>
+
+          
 
             <div class="form-group">
-                <input type="submit" value="수정" class="btn btn-primary" />
+                <input type="submit" value="생성" class="btn btn-primary" />
                 <a class="btn btn-outline-primary" asp-action="Index">목록</a>
             </div>
         </form>
