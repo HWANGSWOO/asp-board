@@ -52,6 +52,7 @@ namespace asp.Controllers
         {
             if (id == 0)
                 return View(new Note());
+
             else
             {
                 var note = await _context.Notes.FindAsync(id);
@@ -70,6 +71,7 @@ namespace asp.Controllers
             //}
             //ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId");
             //return View();
+
         }
 
 
@@ -89,6 +91,7 @@ namespace asp.Controllers
                 {
                     _context.Add(note);
                     await _context.SaveChangesAsync();
+
                 }
                 // Update
                 else

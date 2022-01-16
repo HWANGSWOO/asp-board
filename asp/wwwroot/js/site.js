@@ -5,16 +5,19 @@
 
 showInPopup = (url, title) => {
     $.ajax({
-        type: "GET",
+        type: 'GET',
         url: url,
         success: function (res) {
-            $("#form-modal .modal-body").html(res);
-            $("#form-modal .modal-title").html(title);
-            $("#form-modal").modal('show');
-
+            $('#form-modal .modal-body').html(res);
+            $('#form-modal .modal-title').html(title);
+            $('#form-modal').modal('show');
+            // to make popup draggable
+            $('.modal-dialog').draggable({
+                handle: ".modal-header"
+            });
         }
     })
-};
+}
 
 jQueryAjaxPost = form => {
     try {
@@ -26,21 +29,21 @@ jQueryAjaxPost = form => {
             processData: false,
             success: function (res) {
                 if (res.isValid) {
-                    $("view-all").html(res.html);
-                    $("#form-modal .modal-body").html('');
-                    $("#form-modal .modal-title").html('');
-                    $("#form-modal").modal('hide');
+                    $('#view-all').html(res.html)
+                    $('#form-modal .modal-body').html('');
+                    $('#form-modal .modal-title').html('');
+                    $('#form-modal').modal('hide');
                 }
                 else
-                    $("#form-modal .modal-body").html(res.html);
+                    $('#form-modal .modal-body').html(res.html);
+            },
+            error: function (err) {
+                console.log(err)
             }
         })
-
-    } catch (e) {
-        console.log(e);
+          //기본 양식 제출을 방지하기 위해 여기에 false를 반환
+        return false;
+    } catch (ex) {
+        console.log(ex)
     }
-
-    //기본 양식 제출을 방지하기 위해 여기에 false를 반환
-    return false;
-    
 }
