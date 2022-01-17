@@ -11,13 +11,11 @@ showInPopup = (url, title) => {
             $('#form-modal .modal-body').html(res);
             $('#form-modal .modal-title').html(title);
             $('#form-modal').modal('show');
-            // to make popup draggable
-            $('.modal-dialog').draggable({
-                handle: ".modal-header"
-            });
-        }
+
+            }
+        
     })
-}
+};
 
 jQueryAjaxPost = form => {
     try {
@@ -36,14 +34,43 @@ jQueryAjaxPost = form => {
                 }
                 else
                     $('#form-modal .modal-body').html(res.html);
+                    
             },
             error: function (err) {
                 console.log(err)
             }
         })
           //기본 양식 제출을 방지하기 위해 여기에 false를 반환
+       
+    } catch (e) {
+        console.log(e)
+    }
+    return false;
+}
+
+jQueryAjaxDelete = form => {
+    if (confirm('삭제하시겠습니까?')) {
+        try {
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    $('#view-all').html(res.html);
+
+
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+
+        } catch (e) {
+            console.log(e);
+        }
+         //기본 양식 제출을 방지하기 위해 여기에 false를 반환
         return false;
-    } catch (ex) {
-        console.log(ex)
     }
 }

@@ -14,7 +14,7 @@
                 @Html.DisplayNameFor(model => model.User)
             </th>
             <th>
-               
+               <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",null,Context.Request.Scheme)','New datatable')" class="btn btn-success text-white"><i class="fas fa-random"></i>new datatable</a>"
             </th>
         </tr>
     </thead>
@@ -32,8 +32,13 @@
                     @Html.DisplayFor(modelItem => item.User.UserId)
                 </td>
                 <td>
-                    <a asp-action="AddOrEdit" asp-route-id="@item.NoteNo">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.NoteNo">Delete</a>
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",new {id=item.NoteNo},Context.Request.Scheme)','Update datatable')" class="btn btn-success text-white"><i class="fas fa-pencil-alt"></i>Edit</a>"
+                    <form asp-action="Delete" asp-route-id="@item.NoteNo" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                    <input type = "submit" value ="Delete" class="btn alert-danger"/>
+                
+                </form>
+
+
 
                 </td>
             </tr>
@@ -41,4 +46,3 @@
     </tbody>
 </table>
 
-<a onclick="showInPopup('@Url.Action("AddOrEdit","Note",null,Context.Request.Scheme)','New datatable')" class="btn btn-success text-white"><i class="fas fa-random"></i>new datatable</a>"

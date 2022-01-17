@@ -122,24 +122,7 @@ namespace asp.Controllers
             return View(note);
         }
 
-        // GET: Notes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var note = await _context.Notes
-                .Include(n => n.User)
-                .FirstOrDefaultAsync(m => m.NoteNo == id);
-            if (note == null)
-            {
-                return NotFound();
-            }
-
-            return View(note);
-        }
 
         // POST: Notes/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -149,7 +132,7 @@ namespace asp.Controllers
             var note = await _context.Notes.FindAsync(id);
             _context.Notes.Remove(note);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Notes.ToList()) });
         }
 
         private bool NoteExists(int id)
