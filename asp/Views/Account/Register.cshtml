@@ -1,5 +1,5 @@
 ﻿@model asp.Models.User //8번째 줄에 UserId를 쓰기 위해 사용 UserId가 어디서 왔는지 알려주는 것
-
+@{ Layout = null; }
 <h2>회원가입</h2>
 
 <form class="form-horizontal" method="post" asp-controller="Account" asp-action="Register">
@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">회원가입</button>  <!--submit이용한 이유는 위에 정보들이 입력이 됨, btn-primary는 버튼이 파란색-->
-        <a class="btn btn-warning" href="#">취소</a>                      <!--btn-warning은 주황색-->
+        <a class="btn btn-warning" asp-controller="Home" asp-action="Index">취소</a>                      <!--btn-warning은 주황색-->
   
     </div>
    
