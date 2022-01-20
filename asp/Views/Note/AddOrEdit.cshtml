@@ -1,7 +1,7 @@
 ﻿@model asp.Models.Note
 @{ Layout = null; } 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "AddOrEdit";
    
 }
 
@@ -15,14 +15,24 @@
      
           <div class="form-group">
                 <label asp-for="NoteTitle" class="control-label"></label>
-                <input asp-for="NoteTitle" class="form-control" />
+                <input asp-for="NoteTitle" class="form-control" placeholder="제목입력" />
                 <span asp-validation-for="NoteTitle" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="NoteContents" class="control-label"></label>
+                <label asp-for="NoteContents" class="control-label editor" ></label>
+                <textarea class="form-control editor"  rows="20"  asp-for="NoteContents" placeholder ="내용 입력"></textarea>
+                    <span asp-validation-for="NoteContents" class="text-danger"></span>
+            </div>
+
+
+
+           @* <div class="form-group">
+                <label asp-for="NoteContents" class="control-label editor" ></label>
                 <input asp-for="NoteContents" class="form-control" />
                 <span asp-validation-for="NoteContents" class="text-danger"></span>
-            </div>
+            </div>*@
+
              <div class="form-group">
                 <label asp-for="UserNo" class="control-label"></label>
                 <select asp-for="UserNo" class="form-control" asp-items="ViewBag.UserNo"></select>

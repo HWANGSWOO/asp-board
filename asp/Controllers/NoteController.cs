@@ -139,5 +139,61 @@ namespace asp.Controllers
         {
             return _context.Notes.Any(e => e.NoteNo == id);
         }
+
+
+
+
+
+        // GET: Notes/Create
+        public async Task<IActionResult> Create(int id = 0)
+        {
+            if (id == 0)
+                return View(new Note());
+
+            else
+            {
+                var note = await _context.Notes.FindAsync(id);
+                if (note == null)
+                {
+                    return NotFound();
+                }
+                ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
+
+                return View(note);
+            }
+            //if (HttpContext.Session.GetInt32("USER_LOGIN_KEY") == null)
+            //{
+            //    //로그인이 안된 상태
+            //    return RedirectToAction("Login", "Account");
+            //}
+            //ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId");
+            //return View();
+
+        }
+
+
+
+        // POST: Notes/Edit/5
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int id, [Bind("NoteNo,NoteTitle,NoteContents,UserNo")] Note note)
+        {
+
+
+            if (ModelState.IsValid)
+            {
+              
+                    _context.Add(note);
+                    await _context.SaveChangesAsync();
+
+                return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "Create", note) });
+            }
+            ViewData["UserNo"] = new SelectList(_context.Users, "UserNo", "UserId", note.UserNo);
+            return View(note);
+        }
+
     }
 }
+
+

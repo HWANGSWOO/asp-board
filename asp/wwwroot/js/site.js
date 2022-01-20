@@ -76,3 +76,10 @@ jQueryAjaxDelete = form => {
         return false;
     }
 }
+
+
+$(".editor").trumbowyg();
+
+
+
+

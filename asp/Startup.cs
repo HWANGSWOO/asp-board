@@ -33,9 +33,7 @@ namespace asp
             services.AddSession(); // 세션 기능 사용
             var AspConnection = @"Server=kuniv-practice.database.windows.net;Database=kuniv-practice;Trusted_Connection=True;MultipleActiveResultSets=true;";
             services.AddDbContext<NoteDbcontext>(options => options.UseSqlServer(AspConnection));
-            // services.AddTransient<DbSeeder>();
-            //services.AddScoped<INoteRepository, NoteRepository>(); //서비스 내에 레포지토리를 등록
-            //services.AddTransient<INoteRepository, NoteRepository>();
+
 
 
         }
