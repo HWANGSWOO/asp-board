@@ -1,41 +1,29 @@
 ﻿@model asp.Models.Note
+@{ Layout = null; } 
 
+<div class = "row">
 
-@{
-    ViewData["Title"] = "Create";
-}
-
-<h1>Create</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="NoteTitle" class="control-label"></label>
-                <input asp-for="NoteTitle" class="form-control" />
-                <span asp-validation-for="NoteTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NoteContents" class="control-label"></label>
-                <input asp-for="NoteContents" class="form-control" />
-                <span asp-validation-for="NoteContents" class="text-danger"></span>
-            </div>
-
-              <div class="form-group">
-                <label asp-for="UserNo" class="control-label"></label>
-                <select asp-for="UserNo" class ="form-control" asp-items="ViewBag.UserNo"></select>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a class="btn btn-outline-primary" asp-action="Index">목록</a>
-            </div>
-        </form>
+   <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+        <form class= "form-horizontal" method="post" asp-controller="Note" asp-acrion="Create">
+        <div class= "text=danger" asp-validation-summary="ModelOnly"></div>
+        <div class = "form-group">
+            <label>제목</label>
+            <input type="text" class="form-control" asp-for="NoteTitle" placeholder="제목입력"/>
+            <span class="text-danger" asp-validation-for="NoteTitle"></span>
+        </div>
+        <div class = "form-group">
+            <label>내용</label>
+           <textarea class="form-control" rows="20" asp-for="NoteContents" placeholder="내용입력"></textarea>
+                <span class="text-danger" asp-validation-for="NoteContents"></span>
+        </div>
+        <div class = "form-group">
+            <button type="submit" class="btn btn-primary">저장</button>
+            <a class="btn btn-danger" asp-controller="Note" asp-action="Index">취소</a>
+        </div>
+    
+    
+    
+    </form>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
