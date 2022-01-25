@@ -1,9 +1,22 @@
 ﻿@model IEnumerable<asp.Models.Note>
-
+@{
+    int intNo = 0;
+}
+<div class="col-4 p-0 justify-content-end">
+    <form asp-controller="Note" asp-action="Index">
+        <span class="btn-group">
+            <input class="form-control" type="text" name="SearchText" placeholder ="Search Key" />
+            <input class="p-1 ml-2 btn btn-sm btn-info" type="submit" value="Search"/>
+        </span>
+    </form>
+</div>
 
 <table class="table">
     <thead>
         <tr>
+            <th>
+                No
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.NoteTitle)
             </th>
@@ -21,7 +34,11 @@
     <tbody>
         @foreach (var item in Model)
         {
+            intNo = intNo + 1;
             <tr>
+                <td>
+                    @intNo
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.NoteTitle)
                 </td>

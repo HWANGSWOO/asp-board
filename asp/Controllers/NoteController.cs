@@ -21,13 +21,31 @@ namespace asp.Controllers
             _context = context;
         }
 
-        // GET: Notes
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string SearchText="")
         {
-            var noteDbcontext = _context.Notes.Include(n => n.User);
-            return View(await noteDbcontext.ToListAsync());
+            List<Note> notes;
+
+            if(SearchText != "" && SearchText !=null)
+            {
+                notes = _context.Notes.Where(p=>p.NoteContents.Contains(SearchText)).ToList();
+
+            }
+            else
+            
+                notes=_context.Notes.ToList();
+                return View(notes);
+            
+            
         }
 
+        ////// GET: Notes
+        //public async Task<IActionResult> Index()
+        //{
+        //    var noteDbcontext = _context.Notes.Include(n => n.User);
+        //    return View(await noteDbcontext.ToListAsync());
+        //}
+
+   
         // GET: Notes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
