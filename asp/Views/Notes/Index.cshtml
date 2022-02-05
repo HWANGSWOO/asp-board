@@ -1,0 +1,65 @@
+﻿@model IEnumerable<asp.Models.Note>
+@{
+    int intNo = 0;
+}
+<div class="col-4 p-0 justify-content-end">
+    <form asp-controller="Notes" asp-action="Index">
+        <span class="btn-group">
+            <input class="form-control" type="text" name="SearchText" placeholder ="Search Key" />
+            <input class="p-1 ml-2 btn btn-sm btn-info" type="submit" value="Search"/>
+        </span>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                No
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoteContents)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+               <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",null,Context.Request.Scheme)','New datatable')" class="btn btn-success text-white"><i class="fas fa-random"></i>new datatable</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            intNo = intNo + 1;
+            <tr>
+                <td>
+                    @intNo
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoteTitle)
+                </td>
+                <td>
+                    <a asp-controller="Note" asp-action="Details" asp-route-id="@item.NoteNo">@item.NoteContents</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserId)
+                </td>
+                <td>
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",new {id=item.NoteNo},Context.Request.Scheme)','Update datatable')" class="btn btn-success text-white"><i class="fas fa-pencil-alt"></i>Edit</a>
+                    <form asp-action="Delete" asp-route-id="@item.NoteNo" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                    <input type = "submit" value ="Delete" class="btn alert-danger"/>
+                
+                </form>
+
+
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
