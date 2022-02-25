@@ -1,65 +1,153 @@
-﻿@model IEnumerable<asp.Models.Note>
+﻿
+@model IEnumerable<asp.Models.Note>
 @{
     int intNo = 0;
 }
-<div class="col-4 p-0 justify-content-end">
-    <form asp-controller="Note" asp-action="Index">
-        <span class="btn-group">
-            <input class="form-control" type="text" name="SearchText" placeholder ="Search Key" />
-            <input class="p-1 ml-2 btn btn-sm btn-info" type="submit" value="Search"/>
-        </span>
-    </form>
-</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script> 
+<script src="https://pagination.js.org/dist/2.1.5/pagination.js"></script>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                No
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoteTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoteContents)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-               <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",null,Context.Request.Scheme)','New datatable')" class="btn btn-success text-white"><i class="fas fa-random"></i>new datatable</a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            intNo = intNo + 1;
+<form id="userForm"> 
+    <div class="col-4 p-0 justify-content-end">
+        <form asp-controller="Note" asp-action="Index">
+            <span class="btn-group">
+                <input class="form-control" type="text" name="SearchText" placeholder ="Search Key" />
+                <input class="p-1 ml-2 btn btn-sm btn-info" type="submit" value="Serach"/>
+                <input type = "button" id="btn" value="Ajax" />
+            </span>
+        </form>
+    </div>
+
+    <table class="table" id = "Btable">
+        <thead>
             <tr>
-                <td>
-                    @intNo
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoteTitle)
-                </td>
-                <td>
-                    <a asp-controller="Note" asp-action="Details" asp-route-id="@item.NoteNo">@item.NoteContents</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.UserId)
-                </td>
-                <td>
-                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",new {id=item.NoteNo},Context.Request.Scheme)','Update datatable')" class="btn btn-success text-white"><i class="fas fa-pencil-alt"></i>Edit</a>
-                    <form asp-action="Delete" asp-route-id="@item.NoteNo" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
-                    <input type = "submit" value ="Delete" class="btn alert-danger"/>
-                
-                </form>
-
-
-
-                </td>
+                <th>
+                    No
+                </th>
+                <th>
+                     <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]"> @Html.DisplayNameFor(model => model.NoteTitle)</a>
+                </th>
+                <th>
+                     <a asp-action="Index" asp-route-sortOrder="@ViewData["ContetnsSortParm"]"> @Html.DisplayNameFor(model => model.NoteContents)</a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+                <th>
+                   <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",null,Context.Request.Scheme)','New datatable')" class="btn btn-success text-white"><i class="fas fa-random"></i>new datatable</a>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                intNo = intNo + 1;
+                <tr>
+                    <td>
+                        @intNo
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoteTitle)
+                    </td>
+                    <td>
+                        <a asp-controller="Note" asp-action="Details" asp-route-id="@item.NoteNo">@item.NoteContents</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.UserNo)
+                    </td>
+                    <td>
+                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",new {id=item.NoteNo},Context.Request.Scheme)','Update datatable')" class="btn btn-success text-white"><i class="fas fa-pencil-alt"></i>Edit</a>
+                        <form asp-action="Delete" asp-route-id="@item.NoteNo" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
+                        <input type = "submit" value ="Delete" class="btn alert-danger"/>
+                    
+                    </form>
+    
+    
+    
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
+    <span><a class="paginate_button " aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button current" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">2</a><a class="paginate_button " aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0">3</a><a class="paginate_button " aria-controls="DataTables_Table_0" data-dt-idx="4" tabindex="0">4</a><a class="paginate_button " aria-controls="DataTables_Table_0" data-dt-idx="5" tabindex="0">5</a><span class="ellipsis">…</span><a class="paginate_button " aria-controls="DataTables_Table_0" data-dt-idx="6" tabindex="0">13</a></span>
+    <button id="btn">hi</button>
+   
+    
+    
+    <ul class="pagination" id= "pagetest">
+        @{
+            var numberPage = ViewBag.numberPage;
+            var pageCurrent = ViewBag.pageCurrent;
+            int i;
+            for(i=1; i<= numberPage;i++)
+            {
+                if(i==pageCurrent)
+                {
+                    
+                    <li class="active" id="pa"><a href="?page=@i">@i</a></li>
+                }else
+                {
+                
+                   <li class="active"><a href="?page=@i">@i</a></li>
+                }
+            }
+        }
+    </ul>
+
+</form>
+
+
+
+<script>
+
+    $('#pagetest').click(function(){
+        $.ajax({
+            url:"/Note/PageTests",
+            contentType: "application/x-www-form-urlencoded; charset=euc-kr",
+            data: $("#pagetest").serialize(), 
+            dataType: "json", 
+            type: "GET",
+            async: false, 
+            traditional : true,
+            success: function (data)
+            {
+                 $('#Btable > tbody').empty();
+			     if(data.length>=1){
+				    data.forEach(function(item){  
+                     var str= "";
+				    	str+="<tr>"
+				    	str += "<td>"+item.noteTitle+"</td>";
+				    	str+="<td>"+item.noteContents+"</td>";
+				    	str+="<td>"+item.userNo+"</td>";
+				    	str+="</tr>"
+				    	$('#Btable').append(str);
+                     })		
+                  }
+
+            },
+            error: function (data) {
+                    alert("Error"); 
+            }
+        });
+    });
+
+</script>
+
+
+@*<script>
+  $(`#pagetest`).removeClass("active");
+  $(`#pagetest#page-${pageCurrent}`).addClass("active");
+
+  $("#pagetest").click(function (e) {
+    e.preventDefault();
+    var $item = $(this);
+    var $id = $item.attr("id");
+    var selectedPage = $item.text();
+
+
+    list.renderPagination(selectedPage);//페이지네이션 그리는 함수
+    list.search(selectedPage);//페이지 그리는 함수
+  });
+
+</script>
+*@

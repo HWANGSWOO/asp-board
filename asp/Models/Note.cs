@@ -25,6 +25,7 @@ namespace asp.Models
         [Required(ErrorMessage = "게시물 내용을 입력하세요")]// Not Null 설정
         [DisplayName("NoteContents")]
         public string NoteContents { get; set; }
+
         /// <summary>
         /// 작성자 번호
         /// </summary>

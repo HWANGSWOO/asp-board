@@ -1,65 +1,209 @@
 ﻿@model IEnumerable<asp.Models.Note>
-@{
-    int intNo = 0;
-}
-<div class="col-4 p-0 justify-content-end">
-    <form asp-controller="Notes" asp-action="Index">
-        <span class="btn-group">
-            <input class="form-control" type="text" name="SearchText" placeholder ="Search Key" />
-            <input class="p-1 ml-2 btn btn-sm btn-info" type="submit" value="Search"/>
-        </span>
-    </form>
-</div>
 
-<table class="table">
+@{
+    ViewData["Title"] = "Index";
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script> 
+
+
+
+<style>
+    table{
+        text-align: center;
+    }
+    th{
+        cursor: pointer;  /* 하이퍼 링크 효과*/
+    }
+</style>
+
+
+<h1>Index</h1>
+<p id="demo"></p><br>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div id="All">
+
+<form id="userForm"> 
+    search:<input type="text" name="searchString"/>
+    <input type="button" id="btn" value="AJAX" /> 
+
+</form>
+
+
+<table class="table" id="ATable">
     <thead>
         <tr>
+
             <th>
-                No
+                @Html.DisplayNameFor(model=>model.NoteTitle)
+
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NoteTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoteContents)
+               @Html.DisplayNameFor(model=>model.NoteContents)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.User)
             </th>
-            <th>
-               <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",null,Context.Request.Scheme)','New datatable')" class="btn btn-success text-white"><i class="fas fa-random"></i>new datatable</a>
-            </th>
+            <th></th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            intNo = intNo + 1;
-            <tr>
-                <td>
-                    @intNo
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoteTitle)
-                </td>
-                <td>
-                    <a asp-controller="Note" asp-action="Details" asp-route-id="@item.NoteNo">@item.NoteContents</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.UserId)
-                </td>
-                <td>
-                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Note",new {id=item.NoteNo},Context.Request.Scheme)','Update datatable')" class="btn btn-success text-white"><i class="fas fa-pencil-alt"></i>Edit</a>
-                    <form asp-action="Delete" asp-route-id="@item.NoteNo" onsubmit="return jQueryAjaxDelete(this);" class="d-inline">
-                    <input type = "submit" value ="Delete" class="btn alert-danger"/>
-                
-                </form>
+     <tbody id="datalist" >
+@foreach (var item in Model) {
 
+        <tr>
 
-
-                </td>
-            </tr>
-        }
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoteContents)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserNo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.NoteNo">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.NoteNo">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.NoteNo">Delete</a>
+            </td>
+        </tr>
+}   
     </tbody>
+
 </table>
 
+</div>
+
+  <div class="card-footer" id="updatePanel">
+                       <nav aria-label="Page navigation example">
+                            <ul class="pagination" id="pagetest">
+
+                           @{
+
+                               int numberPage = ViewBag.numberPage;
+                               int pageCurrent = ViewBag.pageCurrent;
+                               int i;
+                               for(i=1; i<= numberPage;i++)
+                               {
+                                   if(i==pageCurrent)
+                                   {
+                                    
+                                       <li class="active"><a id="pa" href="?page=@i">@i</a></li>
+                                   }else
+                                   {
+                                   
+                                      <li class="active"><a href="?page=@i">@i</a></li>
+                                   }
+                               }
+                           }
+
+                                
+                            </ul>
+                        </nav>
+                    </div>
+
+
+<script>
+$('#btn').click(function() { 
+    $.ajax({ 
+        url: "/Notes/AjaxTest",
+        contentType: "application/x-www-form-urlencoded; charset=euc-kr",
+        dataType: "json", 
+        type: "GET", 
+        data: $("#userForm").serialize(), 
+        async: false, 
+        traditional : true,
+        success: function (data) 
+        {
+
+        
+            $('#ATable > tbody').empty();
+			if(data.length>=1){
+				data.forEach(function(item){  
+                    var str= "";
+					str+="<tr>"
+					str += "<td>"+item.noteTitle+"</td>";
+					str+="<td>"+item.noteContents+"</td>";
+					str+="<td>"+item.userNo+"</td>";
+					str+="</tr>"
+					$('#ATable').append(str);
+                    })		                  
+			}
+    
+
+        },
+                error: function (data) {
+                alert("Error"); 
+        }
+    });
+
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+   $('th').each(function (column) {
+      $(this).click(function() {
+              if($(this).is('.asc')) {
+                  $(this).removeClass('asc');
+                  $(this).addClass('desc');
+                  sortdir=-1;                
+              } else {
+                 $(this).addClass('asc');
+                 $(this).removeClass('desc'); 
+                 sortdir=1;
+              }
+              $(this).siblings().removeClass('asc');
+              $(this).siblings().removeClass('desc');
+             var rec = $('table').find('tbody>tr').get();
+             rec.sort(function (a, b) {
+                  var val1 = $(a).children('td').eq(column).text().toUpperCase();
+                  var val2 = $(b).children('td').eq(column).text().toUpperCase();
+                    return (val1 < val2)?-sortdir:(val1>val2)?sortdir:0;
+             });
+             $.each(rec, function(index, row) {
+                  $('tbody').append(row);
+               });
+         });
+     });
+});
+</script>
+
+<script>
+
+    $('#pagetest').click(function(){
+        $.ajax({
+            url:"/Notes/PageTest",
+            contentType: "application/x-www-form-urlencoded; charset=euc-kr",
+            data: $("#pagetest").serialize(), 
+            dataType: "json", 
+            type: "GET",
+            async: false, 
+            traditional : true,
+            success: function (data)
+            {
+                 $('#ATable > tbody').empty();
+			     if(data.length>=1){
+				    data.forEach(function(item){  
+                     var str= "";
+				    	str+="<tr>"
+				    	str += "<td>"+item.noteTitle+"</td>";
+				    	str+="<td>"+item.noteContents+"</td>";
+				    	str+="<td>"+item.userNo+"</td>";
+				    	str+="</tr>"
+				    	
+                        
+                        $('#ATable').append(str);
+                     })		
+                  }
+            },
+            error: function (data) {
+                    alert("Error"); 
+            }
+        });
+    });
+
+</script>

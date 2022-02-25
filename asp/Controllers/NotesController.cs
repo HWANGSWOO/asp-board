@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using asp.DataContext;
 using asp.Models;
+using System.Net.Http;
 
 namespace asp.Controllers
 {
@@ -19,23 +20,91 @@ namespace asp.Controllers
             _context = context;
         }
 
-        // GET: Notes
-        public IActionResult Index(string SearchText = "")
+        //GET: Notes
+        public IActionResult Index(int page = 1)
+        {
+            var notes = from p in _context.Notes
+                        select p;
+
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1; //페이지를 기본값으로 설정
+            }
+            int limit = 5;
+            int start = (int)(page - 1) * limit;
+            int totalProduct = notes.Count();
+            ViewBag.totalProduct = totalProduct;
+            ViewBag.pageCurrent = page;
+            float numberPage = (float)totalProduct / limit;
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage);
+
+
+            var dataProduct = notes.OrderByDescending(p => p.NoteTitle).Skip(start).Take(limit);
+
+            return View(dataProduct.ToList());
+
+        }
+
+        //public async Task<IActionResult> Index()
+        //{
+
+        //    var noteDbcontext = _context.Notes.Include(n => n.User);
+        //    return View(await noteDbcontext.ToListAsync());
+        //}
+
+        public JsonResult PageTest(int page)
+        {
+            var notes = from p in _context.Notes
+                        select p;
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1; //페이지를 기본값으로 설정
+            }
+
+            int limit = 5;
+            int start = (int)(page - 1) * limit;
+            int totalProduct = notes.Count();
+            ViewBag.totalProduct = totalProduct;
+            ViewBag.pageCurrent = page;
+            float numberPage = (float)totalProduct / limit;
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage);
+
+
+            var dataProduct = notes.OrderByDescending(p => p.NoteTitle).Skip(start).Take(limit);
+
+
+            return Json(dataProduct.ToList());
+        }
+
+        public JsonResult AjaxTest(string searchString)
         {
             List<Note> notes;
 
-            if (SearchText != "" && SearchText != null)
+            if (searchString != "" && searchString != null)
             {
-                notes = _context.Notes.Where(p => p.NoteContents.Contains(SearchText)).ToList();
-
+                notes = _context.Notes.Where(p => p.NoteContents.Contains(searchString)).ToList();
+                
             }
             else
+            {
 
                 notes = _context.Notes.ToList();
-            return View(notes);
 
+            }
+           
+            return Json(notes);
 
         }
+
+
 
         // GET: Notes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -55,6 +124,8 @@ namespace asp.Controllers
 
             return View(note);
         }
+
+
 
         // GET: Notes/Create
         public IActionResult Create()

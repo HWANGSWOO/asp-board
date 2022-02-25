@@ -21,23 +21,101 @@ namespace asp.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string SearchText="")
+
+        public IActionResult Index(int? page,string sortOrder,string SearchText = "")
         {
-            List<Note> notes;
 
-            if(SearchText != "" && SearchText !=null)
+            var notes = from p in _context.Notes
+                        select p;
+
+
+
+            if(page > 0)
             {
-                notes = _context.Notes.Where(p=>p.NoteContents.Contains(SearchText)).ToList();
-
+                page = page;
             }
             else
-            
-                notes=_context.Notes.ToList();
-                return View(notes);
-            
-            
+            {
+                page = 1; //페이지를 기본값으로 설정
+            }
+            int limit = 5;
+            int start = (int)(page -1) * limit;
+            int totalProduct = notes.Count();
+            ViewBag.totalProduct = totalProduct;
+            ViewBag.pageCurrent = page;
+            float numberPage = (float)totalProduct/ limit;
+            ViewBag.numberPage =(int) Math.Ceiling(numberPage);
+
+
+            var dataProduct = notes.OrderByDescending(p => p.NoteTitle).Skip(start).Take(limit);
+
+
+
+
+            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["ContetnsSortParm"] = String.IsNullOrEmpty(sortOrder) ? "contents_desc" : "";
+
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    notes = notes.OrderByDescending(s=>s.NoteTitle);
+                    break;
+                case "contents_desc":
+                    notes = notes.OrderByDescending(s => s.NoteContents);
+                    break;
+                default:
+                    notes=notes.OrderBy(s=>s.NoteTitle);
+                    break;
+            }
+
+
+
+            return View(dataProduct.ToList());
+
         }
 
+        public JsonResult PageTests(int page)
+        {
+            var notes = from p in _context.Notes
+                        select p;
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1; //페이지를 기본값으로 설정
+            }
+
+            int limit = 5;
+            int start = (int)(page - 1) * limit;
+            int totalProduct = notes.Count();
+            ViewBag.totalProduct = totalProduct;
+            ViewBag.pageCurrent = page;
+            float numberPage = (float)totalProduct / limit;
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage);
+
+
+            var dataProduct = notes.OrderByDescending(p => p.NoteTitle).Skip(start).Take(limit);
+
+
+            return Json(dataProduct.ToList());
+        }
+
+
+        public JsonResult AjaxTest(string SearchText)
+        {
+
+            var notes = from note in _context.Notes
+                        select note;
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                notes = _context.Notes.Where(s => s.NoteContents.Contains(SearchText));
+            }
+            return Json(notes);
+
+        }
         ////// GET: Notes
         //public async Task<IActionResult> Index()
         //{
@@ -45,7 +123,7 @@ namespace asp.Controllers
         //    return View(await noteDbcontext.ToListAsync());
         //}
 
-   
+
         // GET: Notes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
